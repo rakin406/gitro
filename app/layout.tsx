@@ -27,7 +27,17 @@ export default function RootLayout({
       lang="en"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col" suppressHydrationWarning={true}>{children}</body>
+      <body className="min-h-full flex flex-col" suppressHydrationWarning={true}>
+        <header className="flex flex-col items-center gap-6 text-center">
+          <h1 className="max-w-xs text-4xl font-semibold leading-10 text-black dark:text-zinc-50">
+            Gitro
+          </h1>
+        </header>
+
+        {children}
+
+        <footer></footer>
+      </body>
     </html>
   );
 }
