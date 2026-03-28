@@ -54,10 +54,10 @@ export default function Home() {
         <div className="flex justify-center">
           <button
             type="submit"
-            disabled={isLoading}
             className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-[#E93636] px-5 text-zinc-50 md:w-[158px] cursor-pointer"
+            disabled={isLoading}
           >
-            Search
+            {isLoading ? 'Loading...' : "Search"}
           </button>
         </div>
       </form>
