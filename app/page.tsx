@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, SubmitEvent } from 'react';
-import { Toaster, toast } from 'sonner';
+import { toast } from 'sonner';
 
 export default function Home() {
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -32,7 +32,6 @@ export default function Home() {
 
   return (
     <main className="flex flex-col flex-1 items-center justify-center font-sans">
-      <Toaster />
       <form
         onSubmit={onSubmit}
         className="flex flex-col w-sm md:w-xl rounded-xl bg-foreground text-background overflow-hidden shadow-lg gap-4 p-4"
