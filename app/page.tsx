@@ -15,7 +15,7 @@ export default function Home() {
       const reposText = formData.get("repos") as string;
 
       // Handle null input
-      if (!reposText) {
+      if (!reposText.trim()) {
         throw new Error("Cannot submit empty data.");
       }
 
