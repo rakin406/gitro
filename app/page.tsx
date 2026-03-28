@@ -1,6 +1,7 @@
 'use client'
 
-import { useState, SubmitEvent } from 'react'
+import { useState, SubmitEvent } from 'react';
+import { Toaster, toast } from 'sonner';
 
 export default function Home() {
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -10,7 +11,6 @@ export default function Home() {
     event.preventDefault();
     setIsLoading(true);
     setError(null); // Clear previous errors when a new request starts
-
 
     try {
       const formData = new FormData(event.currentTarget);
@@ -24,13 +24,17 @@ export default function Home() {
       }
 
       const data = await response.json();
-    } catch (error) {
+    } catch (err: any) {
+      // Capture the error message to display to the user
+      setError(err.message);
+      toast(error);
     } finally {
     }
   };
 
   return (
     <main className="flex flex-col flex-1 items-center justify-center font-sans">
+      <Toaster />
       <form
         onSubmit={onSubmit}
         className="flex flex-col w-sm md:w-xl rounded-xl bg-foreground text-background overflow-hidden shadow-lg gap-4 p-4"
