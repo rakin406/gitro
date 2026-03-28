@@ -22,15 +22,21 @@ export default function Home() {
       // Split repositories by space or comma
       const repos = reposText.split(/[\s,]+/).map((s) => s.trim());
 
+      // Data to send to the API
+      const payload = {
+        repos: repos,
+      };
+
       const response = await fetch("/api/maintained?version=1", {
-        method: "GET",
-        body: formData,
+        method: "POST",
+        body: JSON.stringify(payload),
       });
 
       if (!response.ok) {
         throw new Error("Failed to submit the data. Please try again.");
       }
 
+      // TODO: Show results.
       const data = await response.json();
     } catch (error: any) {
       // Capture the error message to display to the user

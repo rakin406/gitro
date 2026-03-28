@@ -13,7 +13,7 @@ const schema = z.object({
   ),
 });
 
-export async function GET(req: NextRequest) {
+export async function POST(req: NextRequest) {
   const parsed = schema.parse(req.body);
   console.log(parsed.repos);
   return NextResponse.json({});
