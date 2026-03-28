@@ -12,4 +12,6 @@ function getApp() {
   return _app;
 }
 
-export const app = getApp();
+const app = getApp();
+
+export default app;
