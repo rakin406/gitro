@@ -22,6 +22,8 @@ export default function Home() {
       // Split repositories by space or comma
       const repos = reposText.split(/[\s,]+/).map((s) => s.trim());
 
+      // TODO: Throw error if repositories length is less than 2.
+
       // Data to send to the API
       const payload = {
         repos: repos,
