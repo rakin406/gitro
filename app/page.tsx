@@ -5,12 +5,10 @@ import { Toaster, toast } from 'sonner';
 
 export default function Home() {
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [error, setError] = useState<string | null>(null);
 
   const onSubmit = async (event: SubmitEvent<HTMLFormElement>) => {
     event.preventDefault();
     setIsLoading(true);
-    setError(null); // Clear previous errors when a new request starts
 
     try {
       const formData = new FormData(event.currentTarget);
@@ -24,10 +22,9 @@ export default function Home() {
       }
 
       const data = await response.json();
-    } catch (err: any) {
+    } catch (error: any) {
       // Capture the error message to display to the user
-      setError(err.message);
-      toast(error);
+      toast(error.message);
     } finally {
       setIsLoading(false);
     }
