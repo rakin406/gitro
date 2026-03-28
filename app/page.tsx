@@ -1,18 +1,32 @@
 'use client'
 
-import { SubmitEvent } from 'react'
+import { useState, SubmitEvent } from 'react'
 
 export default function Home() {
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [error, setError] = useState<string | null>(null);
+
   const onSubmit = async (event: SubmitEvent<HTMLFormElement>) => {
     event.preventDefault();
+    setIsLoading(true);
+    setError(null); // Clear previous errors when a new request starts
 
-    const formData = new FormData(event.currentTarget);
-    const response = await fetch("/api/maintained?version=1", {
-      method: 'GET',
-      body: formData,
-    });
 
-    const data = await response.json();
+    try {
+      const formData = new FormData(event.currentTarget);
+      const response = await fetch("/api/maintained?version=1", {
+        method: 'GET',
+        body: formData,
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to submit the data. Please try again.');
+      }
+
+      const data = await response.json();
+    } catch (error) {
+    } finally {
+    }
   };
 
   return (
