@@ -3,11 +3,14 @@ import * as z from "zod";
 
 const schema = z.object({
   // Repositories
-  repos: z
-    .string()
-    .regex(
-      /^((http|https):\/\/)?(www\.)?github\.com\/([a-zA-Z0-9](?:-(?=[a-zA-Z0-9])|[a-zA-Z0-9]){0,38}(?<=[a-zA-Z0-9]))\/\S+$/,
-    ),
+  repos: z.array(
+    z
+      .string()
+      .trim()
+      .regex(
+        /^((http|https):\/\/)?(www\.)?github\.com\/([a-zA-Z0-9](?:-(?=[a-zA-Z0-9])|[a-zA-Z0-9]){0,38}(?<=[a-zA-Z0-9]))\/\S+$/,
+      ),
+  ),
 });
 
 export async function GET(req: NextRequest) {
