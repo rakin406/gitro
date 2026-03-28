@@ -6,6 +6,7 @@ export default function Home() {
 
         <textarea
           id="repos"
+          name="repos"
           rows={4}
           className="bg-neutral-secondary-medium border border-default-medium rounded-lg block w-full p-3.5 shadow-xs placeholder:text-body resize-none"
           placeholder="github.com/rakin406/gitro">
