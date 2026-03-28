@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import * as z from "zod";
-import app from "@/lib/octokit-app";
+import octokit from "@/lib/octokit";
 
 const schema = z.object({
   // Repositories
