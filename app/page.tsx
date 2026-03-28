@@ -4,6 +4,15 @@ import { SubmitEvent } from 'react'
 
 export default function Home() {
   const onSubmit = async (event: SubmitEvent<HTMLFormElement>) => {
+    event.preventDefault();
+
+    const formData = new FormData(event.currentTarget);
+    const response = await fetch("/api/maintained?version=1", {
+      method: 'GET',
+      body: formData,
+    });
+
+    const data = await response.json();
   };
 
   return (
