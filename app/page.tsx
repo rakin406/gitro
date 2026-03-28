@@ -12,10 +12,10 @@ export default function Home() {
 
     try {
       const formData = new FormData(event.currentTarget);
-      const reposText = formData.get("repos") as string;
+      const reposText = formData.get("repos")?.toString().trim();
 
-      // Handle null input
-      if (!reposText.trim()) {
+      // Handle empty input
+      if (!reposText) {
         throw new Error("Cannot submit empty data.");
       }
 
