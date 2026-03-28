@@ -12,13 +12,20 @@ export default function Home() {
 
     try {
       const formData = new FormData(event.currentTarget);
+      const reposText = formData.get("repos");
+
+      // Handle null input
+      if (!reposText) {
+        throw new Error("Cannot submit empty data.");
+      }
+
       const response = await fetch("/api/maintained?version=1", {
         method: 'GET',
         body: formData,
       });
 
       if (!response.ok) {
-        throw new Error('Failed to submit the data. Please try again.');
+        throw new Error("Failed to submit the data. Please try again.");
       }
 
       const data = await response.json();
