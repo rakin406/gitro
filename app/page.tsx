@@ -29,6 +29,7 @@ export default function Home() {
       setError(err.message);
       toast(error);
     } finally {
+      setIsLoading(false);
     }
   };
 
