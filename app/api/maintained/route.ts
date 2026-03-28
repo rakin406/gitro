@@ -14,7 +14,8 @@ const schema = z.object({
 });
 
 export async function POST(req: NextRequest) {
-  const parsed = schema.parse(req.body);
+  const body = await req.json();
+  const parsed = schema.parse(body);
   console.log(parsed.repos);
   return NextResponse.json({});
 }
