@@ -24,7 +24,7 @@ export default function Home() {
       const data = await response.json();
     } catch (error: any) {
       // Capture the error message to display to the user
-      toast(error.message);
+      toast.error(error.message);
     } finally {
       setIsLoading(false);
     }
