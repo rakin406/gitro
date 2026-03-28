@@ -12,15 +12,18 @@ export default function Home() {
 
     try {
       const formData = new FormData(event.currentTarget);
-      const reposText = formData.get("repos");
+      const reposText = formData.get("repos") as string;
 
       // Handle null input
       if (!reposText) {
         throw new Error("Cannot submit empty data.");
       }
 
+      // Split repositories by space or comma
+      const repos = reposText.split(/[\s,]+/).map((s) => s.trim());
+
       const response = await fetch("/api/maintained?version=1", {
-        method: 'GET',
+        method: "GET",
         body: formData,
       });
 
