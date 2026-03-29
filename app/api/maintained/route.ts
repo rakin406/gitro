@@ -13,10 +13,10 @@ const schema = z.object({
     .array(
       z
         .string()
-        .trim()
         .regex(
-          /^((http|https):\/\/)?(www\.)?(github\.com\/)?([a-zA-Z0-9](?:-(?=[a-zA-Z0-9])|[a-zA-Z0-9]){0,38}(?<=[a-zA-Z0-9]))\/\S+$/,
-        ),
+          /((http|https):\/\/)?(www\.)?(github\.com\/)?([a-zA-Z0-9](?:-(?=[a-zA-Z0-9])|[a-zA-Z0-9]){0,38}(?<=[a-zA-Z0-9]))\/\S+/,
+        )
+        .trim(),
     )
     .min(2)
     .refine((items) => new Set(items).size === items.length, {
