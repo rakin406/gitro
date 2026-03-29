@@ -15,8 +15,23 @@ export default function Page() {
               As developers, we sometimes get confused about what framework
               to choose for our next project. It&apos;s important to choose
               a framework that is maintained and has not <i>turned to dust</i>.
-              That&apos;s why I created this website to find out the most
+              That&apos;s why I created this website to find the most
               maintained projects from a list of GitHub repositories.
+            </p>
+          </li>
+
+          <li className="font-semibold mt-6">
+            Where can I contact you?
+            <p className="font-normal text-left">
+              You can contact me at&nbsp;
+              <a
+                href="mailto:rakinrahman406@gmail.com"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <strong>rakinrahman406@gmail.com</strong>
+              </a>
+              .
             </p>
           </li>
         </ul>
