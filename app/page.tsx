@@ -3,8 +3,16 @@
 import { useState, SubmitEvent } from 'react';
 import { toast } from 'sonner';
 
+interface LeaderboardItem {
+  rank: number;
+  user: string;
+  repo: string;
+  totalCommitsLastYear: number;
+}
+
 export default function Home() {
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [leaderboard, setLeaderboard] = useState<LeaderboardItem[]>([]);
 
   const onSubmit = async (event: SubmitEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -47,19 +55,24 @@ export default function Home() {
         throw new Error("Failed to submit the data. Please try again.");
       }
 
-      // TODO: Show results.
+      // Show results
       const data = await response.json();
-      console.log(data["leaderboard"]);
-    } catch (error: any) {
+      setLeaderboard(data["leaderboard"]);
+    } catch (error: unknown) {
       // Capture the error message to display to the user
-      toast.error(error.message);
+      const message = error instanceof Error
+        ? error.message
+        : typeof error === 'string'
+        ? error
+        : JSON.stringify(error);
+      toast.error(message);
     } finally {
       setIsLoading(false);
     }
   };
 
   return (
-    <main className="flex flex-col flex-1 items-center justify-center font-sans">
+    <main className="flex flex-col flex-1 items-center justify-center font-sans gap-8 p-4">
       <form
         onSubmit={onSubmit}
         className="flex flex-col w-sm md:w-xl rounded-xl bg-foreground text-background overflow-hidden shadow-lg gap-4 p-4"
@@ -85,6 +98,28 @@ export default function Home() {
           </button>
         </div>
       </form>
+
+      {leaderboard.length > 0 && (
+        <div className="w-sm md:w-xl">
+          <h2 className="text-2xl font-bold mb-4">Leaderboard</h2>
+          <div className="flex flex-col gap-2">
+            {leaderboard.map((item) => (
+              <div
+                key={`${item.user}/${item.repo}`}
+                className="flex items-center justify-between bg-foreground text-background rounded-lg p-4 shadow"
+              >
+                <div className="flex items-center gap-4">
+                  <span className="text-xl font-bold">#{item.rank}</span>
+                  <div>
+                    <div className="font-semibold">{item.user}/{item.repo}</div>
+                    <div className="text-sm opacity-75">{item.totalCommitsLastYear} commits last year</div>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
     </main>
   );
 }

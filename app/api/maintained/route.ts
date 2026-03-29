@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import * as z from "zod";
-import octokit from "@/lib/octokit";
+import getOctokit from "@/lib/octokit";
 import logger from "@/lib/logger";
 
 interface GitHub {
@@ -20,29 +20,98 @@ interface Result {
   leaderboard: LeaderboardItem[];
 }
 
+// Helper function to normalize repo URLs to "owner/repo" format
+function normalizeRepo(input: string): string {
+  let normalized = input.trim();
+
+  // Remove protocol (http://, https://)
+  normalized = normalized.replace(/^https?:\/\//, '');
+
+  // Remove www.
+  normalized = normalized.replace(/^www\./, '');
+
+  // Remove github.com/
+  normalized = normalized.replace(/^github\.com\//, '');
+
+  // Remove query parameters and fragments
+  normalized = normalized.replace(/[?#].*$/, '');
+
+  // Extract only owner/repo (first two path segments)
+  const segments = normalized.split('/').filter(s => s.length > 0);
+  if (segments.length >= 2) {
+    normalized = `${segments[0]}/${segments[1]}`;
+  }
+
+  return normalized;
+}
+
 const schema = z.object({
   // Repositories
   repos: z
     .array(
       z
         .string()
-        .regex(
-          /((http|https):\/\/)?(www\.)?(github\.com\/)?([a-zA-Z0-9](?:-(?=[a-zA-Z0-9])|[a-zA-Z0-9]){0,38}(?<=[a-zA-Z0-9]))\/\S+/,
-        )
-        .trim(),
+        .trim()
+        .transform(normalizeRepo)
+        .pipe(
+          z
+            .string()
+            .regex(
+              /^[a-zA-Z0-9](?:-(?=[a-zA-Z0-9])|[a-zA-Z0-9]){0,38}(?<=[a-zA-Z0-9])\/[a-zA-Z0-9_.-]+$/,
+              "Must be a valid GitHub repository in owner/repo format"
+            )
+        ),
     )
     .min(2)
+    .max(10)
     .refine((items) => new Set(items).size === items.length, {
-      message: "Must be an array of unique strings",
+      message: "Must be an array of unique repositories",
     }),
 });
 
 export async function POST(req: NextRequest) {
-  const body = await req.json();
-  const parsed = schema.parse(body);
+  // Parse JSON with error handling
+  let body: unknown;
+  try {
+    body = await req.json();
+  } catch (error) {
+    if (error instanceof SyntaxError) {
+      return NextResponse.json(
+        { error: "Invalid JSON format" },
+        { status: 400 },
+      );
+    }
+    return NextResponse.json(
+      { error: "Failed to parse request body" },
+      { status: 400 },
+    );
+  }
+
+  // Validate schema with error handling
+  const parseResult = schema.safeParse(body);
+  if (!parseResult.success) {
+    return NextResponse.json(
+      { error: "Validation failed", details: parseResult.error.issues },
+      { status: 422 },
+    );
+  }
+
+  const parsed = parseResult.data;
   const github: GitHub[] = [];
   const stats: GitHubStats[] = [];
   const leaderboard: LeaderboardItem[] = [];
+
+  // Initialize octokit
+  let octokit;
+  try {
+    octokit = await getOctokit();
+  } catch (error) {
+    logger.error({ error, message: "Failed to initialize GitHub client" });
+    return NextResponse.json(
+      { error: "Failed to initialize GitHub client" },
+      { status: 500 },
+    );
+  }
 
   // Extract all usernames and repositories
   for (const repo of parsed.repos) {
@@ -68,22 +137,56 @@ export async function POST(req: NextRequest) {
 
   for (const i of github) {
     try {
-      const { data } = await octokit.rest.repos.getCommitActivityStats({
-        owner: i.user,
-        repo: i.repo,
-      });
+      const maxAttempts = 5;
+      let attempt = 0;
+      let response;
 
-      const totalCommitsLastYear = data.reduce(
-        (accumulator, commit) => accumulator + commit.total,
-        0, // Initial value
-      );
+      // Retry loop with exponential backoff for 202 responses
+      while (attempt < maxAttempts) {
+        response = await octokit.rest.repos.getCommitActivityStats({
+          owner: i.user,
+          repo: i.repo,
+        });
 
-      stats.push({
-        ...i,
-        totalCommitsLastYear: totalCommitsLastYear,
-      });
+        if (response.status === 202) {
+          attempt++;
+          if (attempt < maxAttempts) {
+            // Exponential backoff: 1s, 2s, 4s, 8s
+            const delay = Math.pow(2, attempt - 1) * 1000;
+            await new Promise(resolve => setTimeout(resolve, delay));
+          }
+        } else {
+          // Success - process the data
+          break;
+        }
+      }
+
+      if (response.status === 202) {
+        // Still getting 202 after maxAttempts
+        logger.warn({
+          message: "GitHub API still computing commit stats after retries",
+          owner: i.user,
+          repo: i.repo,
+          attempts: maxAttempts,
+        });
+        stats.push({
+          ...i,
+          totalCommitsLastYear: 0,
+        });
+      } else {
+        // Successfully got data
+        const totalCommitsLastYear = response.data.reduce(
+          (accumulator, commit) => accumulator + commit.total,
+          0, // Initial value
+        );
+
+        stats.push({
+          ...i,
+          totalCommitsLastYear: totalCommitsLastYear,
+        });
+      }
     } catch (error) {
-      logger.error({ error });
+      logger.error({ error, owner: i.user, repo: i.repo });
     }
   }
 
