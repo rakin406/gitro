@@ -86,7 +86,12 @@ export async function POST(req: NextRequest) {
     }
   }
 
-  console.log(stats);
+  // Sort highest to lowest
+  const sortedStats = stats.sort(
+    (a, b) => b.totalCommitsLastYear - a.totalCommitsLastYear,
+  );
+
+  console.log(sortedStats);
 
   return NextResponse.json({});
 }
