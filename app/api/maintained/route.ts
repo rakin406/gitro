@@ -8,6 +8,15 @@ interface GitHubInfo {
   repo: string;
 }
 
+interface LeaderboardItem extends GitHubInfo {
+  rank: number;
+  totalCommitsLastYear: number;
+}
+
+interface Result {
+  leaderboard: LeaderboardItem[];
+}
+
 const schema = z.object({
   // Repositories
   repos: z
