@@ -43,7 +43,7 @@ export default function RootLayout({
         {children}
         <Toaster />
 
-        <footer className="absolute bottom-0 left-0 right-0 mx-auto w-fit p-4">
+        <footer className="mt-auto mx-auto w-fit p-4">
           <small className="text-black dark:text-neutral-300 text-center cursor-default">
             &copy; 2026 Gitro, All rights reserved.
           </small>
