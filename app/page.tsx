@@ -101,7 +101,7 @@ export default function Home() {
 
       {leaderboard.length > 0 && (
         <div className="w-sm md:w-xl">
-          <h2 className="text-2xl font-bold mb-4">Leaderboard</h2>
+          <h2 className="text-2xl text-center font-bold mb-4">Leaderboard</h2>
           <div className="flex flex-col gap-2">
             {leaderboard.map((item) => (
               <div
