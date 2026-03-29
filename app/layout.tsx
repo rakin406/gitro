@@ -42,8 +42,8 @@ export default function RootLayout({
         {children}
         <Toaster />
 
-        <footer className="flex justify-center p-4 text-center select-none">
-          <small className="text-black dark:text-neutral-300">
+        <footer className="flex justify-center p-4">
+          <small className="text-black dark:text-neutral-300 text-center cursor-default">
             &copy; 2026 Gitro, All rights reserved.
           </small>
         </footer>
