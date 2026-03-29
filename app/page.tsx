@@ -22,7 +22,10 @@ export default function Home() {
       // Split repositories by space or comma
       const repos = reposText.split(/[\s,]+/).map((s) => s.trim());
 
-      // TODO: Throw error if repositories length is less than 2.
+      // Number of repositories cannot be less than 2
+      if (repos.length < 2) {
+        throw new Error("Minimum 2 repositories are required.");
+      }
 
       // Data to send to the API
       const payload = {
