@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import * as z from "zod";
 import octokit from "@/lib/octokit";
+import logger from "@/lib/logger";
 
 interface GitHubInfo {
   user: string;
@@ -49,6 +50,24 @@ export async function POST(req: NextRequest) {
       user: username,
       repo: repository,
     });
+  }
+
+  for (const i of info) {
+    try {
+      const { data } = await octokit.rest.repos.getCommitActivityStats({
+        owner: i.user,
+        repo: i.repo,
+      });
+
+      const totalCommitsLastYear = data.reduce(
+        (accumulator, commit) => accumulator + commit.total,
+        0, // Initial value
+      );
+
+      console.log(totalCommitsLastYear);
+    } catch (error) {
+      logger.error({ error });
+    }
   }
 
   return NextResponse.json({});
