@@ -17,7 +17,7 @@ export default function Page() {
             Insert GitHub repositories separated by commas, spaces, or newlines.
             At least <strong>two</strong> repositories are required.
           </li>
-          <li>Repositories can be in link or "owner/repo" formats.</li>
+          <li>Repositories can be in link or <code>owner/repo</code> formats.</li>
           <li>Repositories must be <strong>public</strong> and <strong>unique</strong>.</li>
         </ul>
       </div>
