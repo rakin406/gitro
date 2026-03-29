@@ -18,7 +18,10 @@ const schema = z.object({
           /^((http|https):\/\/)?(www\.)?(github\.com\/)?([a-zA-Z0-9](?:-(?=[a-zA-Z0-9])|[a-zA-Z0-9]){0,38}(?<=[a-zA-Z0-9]))\/\S+$/,
         ),
     )
-    .min(2),
+    .min(2)
+    .refine((items) => new Set(items).size === items.length, {
+      message: "Must be an array of unique strings",
+    }),
 });
 
 export async function POST(req: NextRequest) {
