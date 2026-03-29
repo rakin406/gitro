@@ -15,7 +15,8 @@ export default function Page() {
         <ul className="list-inside list-disc text-left">
           <li>
             Insert GitHub repositories separated by commas, spaces, or newlines.
-            At least <strong>two</strong> repositories are required.
+            At least <strong>two</strong> repositories are required. The maximum
+            is <strong>ten</strong>.
           </li>
           <li>Repositories can be in link or <code>owner/repo</code> formats.</li>
           <li>Repositories must be <strong>public</strong> and <strong>unique</strong>.</li>
