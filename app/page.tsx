@@ -22,14 +22,17 @@ export default function Home() {
       // Split repositories by space or comma
       const repos = reposText.split(/[\s,]+/).map((s) => s.trim());
 
+      // Get only unique repositories
+      const uniqueRepos = [...new Set(repos)];
+
       // Number of repositories cannot be less than 2
-      if (repos.length < 2) {
-        throw new Error("Minimum 2 repositories are required.");
+      if (uniqueRepos.length < 2) {
+        throw new Error("Minimum 2 unique repositories required.");
       }
 
       // Data to send to the API
       const payload = {
-        repos: repos,
+        repos: uniqueRepos,
       };
 
       const response = await fetch("/api/maintained?version=1", {
