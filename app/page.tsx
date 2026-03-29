@@ -83,7 +83,7 @@ export default function Home() {
           id="repos"
           name="repos"
           rows={4}
-          className="bg-neutral-secondary-medium border border-default-medium rounded-lg block w-full p-3.5 shadow-xs placeholder:text-body resize-none"
+          className="bg-neutral-secondary-medium border border-default-medium block w-full p-3.5 shadow-xs placeholder:text-body resize-none"
           placeholder="github.com/rakin406/gitro"
           required
         ></textarea>
@@ -101,8 +101,13 @@ export default function Home() {
 
       {leaderboard.length > 0 && (
         <div className="w-sm md:w-xl">
-          <h2 className="text-2xl font-bold mb-4">Leaderboard</h2>
-          <div className="flex flex-col gap-2">
+          <h2 className="text-2xl text-center font-bold mb-4">Leaderboard</h2>
+          <div className="flex flex-col max-h-80 overflow-y-auto gap-2 
+            [&::-webkit-scrollbar]:w-2
+            [&::-webkit-scrollbar-track]:rounded-lg
+            [&::-webkit-scrollbar-thumb]:rounded-lg
+            [&::-webkit-scrollbar-track]:bg-gray-200 
+            [&::-webkit-scrollbar-thumb]:bg-gray-500">
             {leaderboard.map((item) => (
               <div
                 key={`${item.owner}/${item.repo}`}
@@ -111,7 +116,14 @@ export default function Home() {
                 <div className="flex items-center gap-4">
                   <span className="text-xl font-bold">#{item.rank}</span>
                   <div>
-                    <div className="font-semibold">{item.owner}/{item.repo}</div>
+                    <a
+                      href={`https://github.com/${item.owner}/${item.repo}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="font-semibold cursor-pointer"
+                    >
+                      {item.owner}/{item.repo}
+                    </a>
                     <div className="text-sm opacity-75">{item.totalCommitsLastYear} commits last year</div>
                   </div>
                 </div>
