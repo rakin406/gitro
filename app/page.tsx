@@ -80,7 +80,7 @@ export default function Home() {
     <main className="flex flex-col flex-1 items-center justify-center font-sans gap-8 p-4">
       <form
         onSubmit={onSubmit}
-        className="relative bottom-20 flex flex-col w-sm md:w-xl rounded-xl bg-foreground text-background overflow-hidden shadow-lg gap-4 p-4"
+        className="flex flex-col w-sm md:w-xl rounded-xl bg-foreground text-background overflow-hidden shadow-lg gap-4 p-4"
       >
         <label htmlFor="repos" className="block cursor-default">Insert GitHub repositories</label>
 
