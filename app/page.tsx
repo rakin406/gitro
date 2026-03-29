@@ -83,8 +83,7 @@ export default function Home() {
           id="repos"
           name="repos"
           rows={4}
-          className="bg-neutral-secondary-medium border border-default-medium block w-full p-3.5 shadow-xs placeholder:text-body 
-          resize-none [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-track]:bg-gray-200 [&::-webkit-scrollbar-thumb]:bg-gray-400"
+          className="bg-neutral-secondary-medium border border-default-medium block w-full p-3.5 shadow-xs placeholder:text-body resize-none"
           placeholder="github.com/rakin406/gitro"
           required
         ></textarea>
