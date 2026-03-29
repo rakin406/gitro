@@ -30,7 +30,16 @@ export async function POST(req: NextRequest) {
   const info: GitHubInfo[] = [];
 
   for (const repo of parsed.repos) {
-    // TODO
+    // Extract username and repository
+    const matches = [...repo.matchAll(/[^\/\s]+/g)];
+
+    // Username and repository must exist
+    if (matches.length < 2) {
+      return NextResponse.json(
+        { error: "Username/repository is missing" },
+        { status: 422 },
+      );
+    }
   }
 
   return NextResponse.json({});
