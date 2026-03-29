@@ -42,6 +42,7 @@ export async function POST(req: NextRequest) {
   const parsed = schema.parse(body);
   const github: GitHub[] = [];
   const stats: GitHubStats[] = [];
+  const leaderboard: LeaderboardItem[] = [];
 
   // Extract all usernames and repositories
   for (const repo of parsed.repos) {
@@ -91,7 +92,16 @@ export async function POST(req: NextRequest) {
     (a, b) => b.totalCommitsLastYear - a.totalCommitsLastYear,
   );
 
-  console.log(sortedStats);
+  sortedStats.forEach((value, index) => {
+    leaderboard.push({
+      rank: index + 1,
+      ...value,
+    });
+  });
 
-  return NextResponse.json({});
+  const result: Result = {
+    leaderboard: leaderboard,
+  };
+
+  return NextResponse.json(result);
 }

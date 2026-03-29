@@ -49,6 +49,7 @@ export default function Home() {
 
       // TODO: Show results.
       const data = await response.json();
+      console.log(data["leaderboard"]);
     } catch (error: any) {
       // Capture the error message to display to the user
       toast.error(error.message);
