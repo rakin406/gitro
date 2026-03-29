@@ -32,6 +32,7 @@ export default function RootLayout({
         <header className="flex flex-col items-center gap-4 text-center select-none">
           <div className="flex text-sm text-black dark:text-neutral-300 gap-x-4 my-3">
             <a className="cursor-pointer" href="/">Home</a>
+            <a className="cursor-pointer">Usage</a>
             <a className="cursor-pointer">FAQ</a>
           </div>
           <h1 className="max-w-xs text-4xl font-semibold leading-10 text-black dark:text-zinc-50">
