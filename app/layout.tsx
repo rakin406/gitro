@@ -15,7 +15,7 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: "Gitro",
-  description: "",  // TODO: Add description later.
+  description: "Gitro lets you check the most maintained GitHub repositories.",
 };
 
 export default function RootLayout({
