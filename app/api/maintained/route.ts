@@ -1,10 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
 import * as z from "zod";
-import getOctokit from "@/lib/octokit";
+import { getOctokit } from "@/lib/octokit";
 import logger from "@/lib/logger";
 
 interface GitHub {
-  user: string;
+  owner: string;
   repo: string;
 }
 
@@ -25,19 +25,19 @@ function normalizeRepo(input: string): string {
   let normalized = input.trim();
 
   // Remove protocol (http://, https://)
-  normalized = normalized.replace(/^https?:\/\//, '');
+  normalized = normalized.replace(/^https?:\/\//, "");
 
   // Remove www.
-  normalized = normalized.replace(/^www\./, '');
+  normalized = normalized.replace(/^www\./, "");
 
   // Remove github.com/
-  normalized = normalized.replace(/^github\.com\//, '');
+  normalized = normalized.replace(/^github\.com\//, "");
 
   // Remove query parameters and fragments
-  normalized = normalized.replace(/[?#].*$/, '');
+  normalized = normalized.replace(/[?#].*$/, "");
 
   // Extract only owner/repo (first two path segments)
-  const segments = normalized.split('/').filter(s => s.length > 0);
+  const segments = normalized.split("/").filter((s) => s.length > 0);
   if (segments.length >= 2) {
     normalized = `${segments[0]}/${segments[1]}`;
   }
@@ -58,8 +58,8 @@ const schema = z.object({
             .string()
             .regex(
               /^[a-zA-Z0-9](?:-(?=[a-zA-Z0-9])|[a-zA-Z0-9]){0,38}(?<=[a-zA-Z0-9])\/[a-zA-Z0-9_.-]+$/,
-              "Must be a valid GitHub repository in owner/repo format"
-            )
+              "Must be a valid GitHub repository in owner/repo format",
+            ),
         ),
     )
     .min(2)
@@ -106,11 +106,9 @@ export async function POST(req: NextRequest) {
   try {
     octokit = await getOctokit();
   } catch (error) {
-    logger.error({ error, message: "Failed to initialize GitHub client" });
-    return NextResponse.json(
-      { error: "Failed to initialize GitHub client" },
-      { status: 500 },
-    );
+    const message = "Failed to initialize GitHub client";
+    logger.error({ error, message: message });
+    return NextResponse.json({ error: message }, { status: 500 });
   }
 
   // Extract all usernames and repositories
@@ -130,7 +128,7 @@ export async function POST(req: NextRequest) {
     const repository = matches.at(-1)?.toString() ?? "";
 
     github.push({
-      user: username,
+      owner: username,
       repo: repository,
     });
   }
@@ -144,7 +142,7 @@ export async function POST(req: NextRequest) {
       // Retry loop with exponential backoff for 202 responses
       while (attempt < maxAttempts) {
         response = await octokit.rest.repos.getCommitActivityStats({
-          owner: i.user,
+          owner: i.owner,
           repo: i.repo,
         });
 
@@ -153,7 +151,7 @@ export async function POST(req: NextRequest) {
           if (attempt < maxAttempts) {
             // Exponential backoff: 1s, 2s, 4s, 8s
             const delay = Math.pow(2, attempt - 1) * 1000;
-            await new Promise(resolve => setTimeout(resolve, delay));
+            await new Promise((resolve) => setTimeout(resolve, delay));
           }
         } else {
           // Success - process the data
@@ -161,11 +159,13 @@ export async function POST(req: NextRequest) {
         }
       }
 
+      if (!response) continue;
+
       if (response.status === 202) {
         // Still getting 202 after maxAttempts
         logger.warn({
           message: "GitHub API still computing commit stats after retries",
-          owner: i.user,
+          owner: i.owner,
           repo: i.repo,
           attempts: maxAttempts,
         });
@@ -186,7 +186,7 @@ export async function POST(req: NextRequest) {
         });
       }
     } catch (error) {
-      logger.error({ error, owner: i.user, repo: i.repo });
+      logger.error({ error, owner: i.owner, repo: i.repo });
     }
   }
 

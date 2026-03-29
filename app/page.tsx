@@ -5,7 +5,7 @@ import { toast } from 'sonner';
 
 interface LeaderboardItem {
   rank: number;
-  user: string;
+  owner: string;
   repo: string;
   totalCommitsLastYear: number;
 }
@@ -63,8 +63,8 @@ export default function Home() {
       const message = error instanceof Error
         ? error.message
         : typeof error === 'string'
-        ? error
-        : JSON.stringify(error);
+          ? error
+          : JSON.stringify(error);
       toast.error(message);
     } finally {
       setIsLoading(false);
@@ -105,13 +105,13 @@ export default function Home() {
           <div className="flex flex-col gap-2">
             {leaderboard.map((item) => (
               <div
-                key={`${item.user}/${item.repo}`}
+                key={`${item.owner}/${item.repo}`}
                 className="flex items-center justify-between bg-foreground text-background rounded-lg p-4 shadow"
               >
                 <div className="flex items-center gap-4">
                   <span className="text-xl font-bold">#{item.rank}</span>
                   <div>
-                    <div className="font-semibold">{item.user}/{item.repo}</div>
+                    <div className="font-semibold">{item.owner}/{item.repo}</div>
                     <div className="text-sm opacity-75">{item.totalCommitsLastYear} commits last year</div>
                   </div>
                 </div>

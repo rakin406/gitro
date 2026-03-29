@@ -34,7 +34,6 @@ export async function getOctokit() {
 
     _octokit = await app.getInstallationOctokit(installationId);
   }
+
   return _octokit;
 }
-
-export default getOctokit;
