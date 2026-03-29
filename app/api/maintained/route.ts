@@ -3,14 +3,17 @@ import * as z from "zod";
 import octokit from "@/lib/octokit";
 import logger from "@/lib/logger";
 
-interface GitHubInfo {
+interface GitHub {
   user: string;
   repo: string;
 }
 
-interface LeaderboardItem extends GitHubInfo {
-  rank: number;
+interface GitHubStats extends GitHub {
   totalCommitsLastYear: number;
+}
+
+interface LeaderboardItem extends GitHubStats {
+  rank: number;
 }
 
 interface Result {
@@ -37,7 +40,8 @@ const schema = z.object({
 export async function POST(req: NextRequest) {
   const body = await req.json();
   const parsed = schema.parse(body);
-  const info: GitHubInfo[] = [];
+  const github: GitHub[] = [];
+  const stats: GitHubStats[] = [];
 
   // Extract all usernames and repositories
   for (const repo of parsed.repos) {
@@ -55,13 +59,13 @@ export async function POST(req: NextRequest) {
     const username = matches.at(-2)?.toString() ?? "";
     const repository = matches.at(-1)?.toString() ?? "";
 
-    info.push({
+    github.push({
       user: username,
       repo: repository,
     });
   }
 
-  for (const i of info) {
+  for (const i of github) {
     try {
       const { data } = await octokit.rest.repos.getCommitActivityStats({
         owner: i.user,
@@ -73,7 +77,11 @@ export async function POST(req: NextRequest) {
         0, // Initial value
       );
 
-      console.log(totalCommitsLastYear);
+      stats.push({
+        user: i.user,
+        repo: i.repo,
+        totalCommitsLastYear: totalCommitsLastYear,
+      });
     } catch (error) {
       logger.error({ error });
     }
