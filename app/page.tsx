@@ -117,7 +117,13 @@ export default function Home() {
                 <div className="flex items-center gap-4">
                   <span className="text-xl font-bold">#{item.rank}</span>
                   <div>
-                    <div className="font-semibold">{item.owner}/{item.repo}</div>
+                    <a
+                      href={`https://github.com/${item.owner}/${item.repo}`}
+                      target="_blank"
+                      className="font-semibold cursor-pointer"
+                    >
+                      {item.owner}/{item.repo}
+                    </a>
                     <div className="text-sm opacity-75">{item.totalCommitsLastYear} commits last year</div>
                   </div>
                 </div>
