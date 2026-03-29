@@ -75,16 +75,16 @@ export default function Home() {
     <main className="flex flex-col flex-1 items-center justify-center font-sans gap-8 p-4">
       <form
         onSubmit={onSubmit}
-        className="flex flex-col w-sm md:w-xl rounded-xl bg-foreground text-background overflow-hidden shadow-lg gap-4 p-4"
+        className="relative bottom-20 flex flex-col w-sm md:w-xl rounded-xl bg-foreground text-background overflow-hidden shadow-lg gap-4 p-4"
       >
-        <label htmlFor="repos" className="block cursor-default">Insert GitHub repositories (separated by spaces)</label>
+        <label htmlFor="repos" className="block cursor-default">Insert GitHub repositories</label>
 
         <textarea
           id="repos"
           name="repos"
           rows={4}
           className="bg-neutral-secondary-medium border border-default-medium block w-full p-3.5 shadow-xs placeholder:text-body resize-none"
-          placeholder="github.com/rakin406/gitro"
+          placeholder="Type here..."
           required
         ></textarea>
 
