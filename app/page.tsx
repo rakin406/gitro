@@ -119,6 +119,7 @@ export default function Home() {
                     <a
                       href={`https://github.com/${item.owner}/${item.repo}`}
                       target="_blank"
+                      rel="noopener noreferrer"
                       className="font-semibold cursor-pointer"
                     >
                       {item.owner}/{item.repo}
