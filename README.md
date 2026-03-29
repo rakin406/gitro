@@ -33,6 +33,7 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 ## FAQ
 
 * **Why did you make this website?**
+
 As developers, we sometimes get confused about what framework
 to choose for our next project. It's important to choose
 a framework that is maintained and has not _turned to dust_.
