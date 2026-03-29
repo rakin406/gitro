@@ -103,7 +103,12 @@ export default function Home() {
       {leaderboard.length > 0 && (
         <div className="w-sm md:w-xl">
           <h2 className="text-2xl text-center font-bold mb-4">Leaderboard</h2>
-          <div className="flex flex-col max-h-80 overflow-y-auto gap-2">
+          <div className="flex flex-col max-h-80 overflow-y-auto gap-2 
+            [&::-webkit-scrollbar]:w-2
+            [&::-webkit-scrollbar-track]:rounded-lg
+            [&::-webkit-scrollbar-thumb]:rounded-lg
+            [&::-webkit-scrollbar-track]:bg-gray-200 
+            [&::-webkit-scrollbar-thumb]:bg-gray-500">
             {leaderboard.map((item) => (
               <div
                 key={`${item.owner}/${item.repo}`}
