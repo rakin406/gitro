@@ -78,14 +78,15 @@ export async function POST(req: NextRequest) {
       );
 
       stats.push({
-        user: i.user,
-        repo: i.repo,
+        ...i,
         totalCommitsLastYear: totalCommitsLastYear,
       });
     } catch (error) {
       logger.error({ error });
     }
   }
+
+  console.log(stats);
 
   return NextResponse.json({});
 }
