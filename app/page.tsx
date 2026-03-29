@@ -33,9 +33,14 @@ export default function Home() {
       // Get only unique repositories
       const uniqueRepos = [...new Set(repos)];
 
-      // Number of repositories cannot be less than 2
+      // Repositories cannot be less than 2
       if (uniqueRepos.length < 2) {
-        throw new Error("Minimum 2 unique repositories required.");
+        throw new Error("Minimum 2 unique repositories are required.");
+      }
+
+      // Repositories cannot be more than 10
+      if (uniqueRepos.length > 10) {
+        throw new Error("Maximum 10 repositories are allowed.");
       }
 
       // Data to send to the API
